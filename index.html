@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema de Cadastro RA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --success: #22c55e;
+      --error: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent; /* Remove o brilho azul ao tocar no mobile */
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      /* Ajuste de padding para não grudar nas bordas em telas pequenas */
+      padding: 15px;
+    }
+
+    .container {
+      width: 100%;
+      /* Mudança para max-width dinâmico */
+      max-width: 450px;
+      background: var(--bg-card);
+      padding: 24px; /* Reduzido levemente para telas menores */
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+    }
+
+    /* Tablet e Desktop */
+    @media (min-width: 640px) {
+      .container {
+        padding: 32px;
+      }
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-align: center;
+      letter-spacing: -0.025em;
+    }
+
+    @media (min-width: 640px) {
+      h1 { font-size: 1.5rem; }
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg-main);
+      color: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 16px; /* Evita o zoom automático do iOS ao focar no input */
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Grid responsiva para RA e Dígito */
+    .row {
+      display: grid;
+      grid-template-columns: 1fr; /* Stack em celulares muito pequenos */
+      gap: 12px;
+    }
+
+    @media (min-width: 400px) {
+      .row {
+        grid-template-columns: 2.5fr 1fr; /* Lado a lado em celulares médios/grandes */
+      }
+    }
+
+    button {
+      width: 100%;
+      padding: 14px; /* Maior área de toque no mobile */
+      margin-top: 10px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .msg {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.9rem;
+      min-height: 20px;
+    }
+
+    hr {
+      margin: 20px 0;
+      border: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .list-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .list {
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .item {
+      background: rgba(15, 23, 42, 0.5);
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      border: 1px solid var(--border);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .item-info b {
+      display: block;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      word-break: break-word; /* Evita que nomes longos quebrem o layout */
+    }
+
+    .item-info span {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-family: monospace;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Cadastro de RA</h1>
+  <p class="subtitle">Gerenciamento de registros acadêmicos</p>
+
+  <form id="form">
+    <div class="form-group">
+      <label for="nome">Nome do Aluno</label>
+      <input type="text" id="nome" placeholder="Ex: João Silva" required>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="ra">Registro (RA)</label>
+        <input type="number" id="ra" placeholder="000000" required>
+      </div>
+      <div class="form-group">
+        <label for="digito">Dígito</label>
+        <input type="number" id="digito" placeholder="0" required>
+      </div>
+    </div>
+    
+    <button type="submit">Salvar Registro</button>
+  </form>
+
+  <div class="msg" id="msg"></div>
+
+  <hr>
+
+  <div class="list-title">Registros Recentes</div>
+  <div class="list" id="lista"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBVtxCpZ8t8tmmW0wf_ycevrwUSpIdSGwo",
+    authDomain: "save-ra-digit.firebaseapp.com",
+    projectId: "save-ra-digit",
+    storageBucket: "save-ra-digit.firebasestorage.app",
+    messagingSenderId: "241060595734",
+    appId: "1:241060595734:web:b54714c194e133cc02cd37"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const form = document.getElementById("form");
+  const msg = document.getElementById("msg");
+  const lista = document.getElementById("lista");
+
+  function mostrarMensagem(texto, tipo = "success") {
+    msg.style.color = tipo === "success" ? "var(--success)" : "var(--error)";
+    msg.innerText = texto;
+    setTimeout(() => msg.innerText = "", 4000);
+  }
+
+  async function carregarDados() {
+    lista.innerHTML = "<p style='color:var(--text-muted); font-size:12px;'>Sincronizando...</p>";
+    try {
+      const querySnapshot = await getDocs(collection(db, "RA"));
+      lista.innerHTML = "";
+
+      if (querySnapshot.empty) {
+        lista.innerHTML = "<p style='color:var(--text-muted); font-size:13px; text-align:center;'>Nenhum registro encontrado.</p>";
+        return;
+      }
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div class="item-info">
+            <b>${data.nome}</b>
+            <span>RA: ${data.ra}</span>
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+    } catch (e) {
+      lista.innerHTML = "Erro ao carregar dados.";
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nome = document.getElementById("nome").value.trim();
+    const ra = document.getElementById("ra").value.trim();
+    const digito = document.getElementById("digito").value.trim();
+
+    const raFormatado = ra + digito; 
+
+    try {
+      await addDoc(collection(db, "RA"), {
+        nome,
+        ra: raFormatado,
+        createdAt: new Date() 
+      });
+
+      mostrarMensagem("Registro salvo com sucesso!");
+      form.reset();
+      carregarDados();
+
+    } catch (err) {
+      mostrarMensagem("Erro ao salvar", "error");
+    }
+  });
+
+  carregarDados();
+</script>
+
+</body>
+</html>
